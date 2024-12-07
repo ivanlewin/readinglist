@@ -3,6 +3,6 @@ export interface Book {
   title: string;
   authors: string[];
   coverUrl: string;
-  amazonUrl: string;
+  articleUrl: string;
 }
 

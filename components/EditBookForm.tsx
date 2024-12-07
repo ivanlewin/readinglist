@@ -44,8 +44,8 @@ export function EditBookForm({ book, onSave, onCancel }: EditBookFormProps) {
         <Input id="isbn" name="isbn" value={editedBook.isbn} onChange={handleChange} required />
       </div>
       <div>
-        <Label htmlFor="amazonUrl">Amazon URL</Label>
-        <Input id="amazonUrl" name="amazonUrl" value={editedBook.amazonUrl} onChange={handleChange} required />
+        <Label htmlFor="articleUrl">Article URL</Label>
+        <Input id="articleUrl" name="articleUrl" value={editedBook.articleUrl} onChange={handleChange} required />
       </div>
       <div>
         <Label htmlFor="coverUrl">Cover Image URL</Label>

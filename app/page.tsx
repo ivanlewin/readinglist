@@ -77,12 +77,12 @@ export default function ReadingList() {
                     <p className="text-sm text-gray-600 truncate">{book.authors.join(', ')}</p>
                     <p className="text-xs text-gray-500">ISBN: {book.isbn}</p>
                     <a
-                      href={book.amazonUrl}
+                      href={book.articleUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-500 hover:underline text-sm"
                     >
-                      View on Amazon
+                      Buy online
                     </a>
                   </div>
                   <div className="flex sm:flex-col space-x-2 sm:space-x-0 sm:space-y-2">
