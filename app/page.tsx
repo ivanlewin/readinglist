@@ -8,13 +8,15 @@ import { Book } from '@/types/Book'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Trash2, Edit } from 'lucide-react'
+import { Trash2, Edit, Plus } from 'lucide-react'
 import { EditBookForm } from '@/components/EditBookForm'
+import { AddCustomBookForm } from '@/components/AddCustomBookForm'
 
 export default function ReadingList() {
   const [isbn, setIsbn] = useState('')
   const { books, addBook, removeBook, editBook } = useBookList()
   const [editingBook, setEditingBook] = useState<string | null>(null)
+  const [isAddingCustomBook, setIsAddingCustomBook] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -40,11 +42,16 @@ export default function ReadingList() {
     setEditingBook(null)
   }
 
+  const handleAddCustomBook = (newBook: Book) => {
+    addBook(newBook)
+    setIsAddingCustomBook(false)
+  }
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">My Reading List</h1>
-      <form onSubmit={handleSubmit} className="mb-6">
-        <div className="flex flex-col sm:flex-row gap-2">
+      <div className="mb-6 space-y-4">
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
           <Input
             type="text"
             value={isbn}
@@ -53,8 +60,23 @@ export default function ReadingList() {
             className="flex-grow"
           />
           <Button type="submit" className="w-full sm:w-auto">Add Book</Button>
+        </form>
+        <Button 
+          onClick={() => setIsAddingCustomBook(true)} 
+          className="w-full sm:w-auto"
+          disabled={isAddingCustomBook}
+        >
+          <Plus className="mr-2 h-4 w-4" /> Add Custom Book
+        </Button>
+      </div>
+      {isAddingCustomBook && (
+        <div className="mb-6">
+          <AddCustomBookForm 
+            onAdd={handleAddCustomBook} 
+            onCancel={() => setIsAddingCustomBook(false)} 
+          />
         </div>
-      </form>
+      )}
       <div className="space-y-4">
         {books.map((book: Book) => (
           <Card key={book.isbn} className="min-h-[150px]">
