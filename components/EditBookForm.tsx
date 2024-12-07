@@ -36,6 +36,10 @@ export function EditBookForm({ book, onSave, onCancel }: EditBookFormProps) {
         <Input id="title" name="title" value={editedBook.title} onChange={handleChange} required />
       </div>
       <div>
+        <Label htmlFor="subtitle">Subtitle</Label>
+        <Input id="subtitle" name="subtitle" value={editedBook.subtitle || ''} onChange={handleChange} />
+      </div>
+      <div>
         <Label htmlFor="authors">Authors (comma-separated)</Label>
         <Input id="authors" name="authors" value={editedBook.authors.join(', ')} onChange={handleAuthorsChange} required />
       </div>
@@ -50,6 +54,20 @@ export function EditBookForm({ book, onSave, onCancel }: EditBookFormProps) {
       <div>
         <Label htmlFor="coverUrl">Cover Image URL</Label>
         <Input id="coverUrl" name="coverUrl" value={editedBook.coverUrl} onChange={handleChange} required />
+      </div>
+      <div>
+        <Label htmlFor="publishDate">Publish Date</Label>
+        <Input id="publishDate" name="publishDate" value={editedBook.publishDate || ''} onChange={handleChange} />
+      </div>
+      <div>
+        <Label htmlFor="numberOfPages">Number of Pages</Label>
+        <Input 
+          id="numberOfPages" 
+          name="numberOfPages" 
+          type="number" 
+          value={editedBook.numberOfPages || ''} 
+          onChange={handleChange} 
+        />
       </div>
       <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
         <Button type="button" variant="outline" onClick={onCancel} className="w-full sm:w-auto">Cancel</Button>

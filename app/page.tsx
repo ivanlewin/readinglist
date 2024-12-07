@@ -74,8 +74,11 @@ export default function ReadingList() {
                   </div>
                   <div className="flex-grow overflow-hidden text-center sm:text-left">
                     <h2 className="text-lg font-semibold truncate">{book.title}</h2>
+                    {book.subtitle && <p className="text-sm text-gray-600 italic truncate">{book.subtitle}</p>}
                     <p className="text-sm text-gray-600 truncate">{book.authors.join(', ')}</p>
                     <p className="text-xs text-gray-500">ISBN: {book.isbn}</p>
+                    {book.publishDate && <p className="text-xs text-gray-500">Published: {book.publishDate}</p>}
+                    {book.numberOfPages && <p className="text-xs text-gray-500">Pages: {book.numberOfPages}</p>}
                     <a
                       href={book.articleUrl}
                       target="_blank"
