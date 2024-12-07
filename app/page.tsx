@@ -16,7 +16,8 @@ export default function ReadingList() {
   const [editingBook, setEditingBook] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [authorFilter, setAuthorFilter] = useState('')
-  const [sortField, setSortField] = useState<'publishDate' | 'numberOfPages' | null>(null)
+  const [sortField, setSortField] = useState<'publishDate' | 'numberOfPages'>('publishDate')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
 
   const filteredAndSortedBooks = useMemo(() => {
     return books
@@ -27,20 +28,23 @@ export default function ReadingList() {
           book.authors.some((author) => author.toLowerCase().includes(searchQuery.toLowerCase()))
         const matchesAuthor = 
           authorFilter === '' || 
-          book.authors.some((author) => author.toLowerCase().includes(authorFilter.toLowerCase()))
+          book.authors.some((author) => author === authorFilter)
         return matchesSearch && matchesAuthor
       })
       .sort((a, b) => {
-        if (!sortField) return 0
         if (sortField === 'publishDate') {
-          return new Date(b.publishDate || '').getTime() - new Date(a.publishDate || '').getTime()
+          const dateA = new Date(a.publishDate || '').getTime()
+          const dateB = new Date(b.publishDate || '').getTime()
+          return sortOrder === 'asc' ? dateA - dateB : dateB - dateA
         }
         if (sortField === 'numberOfPages') {
-          return (b.numberOfPages || 0) - (a.numberOfPages || 0)
+          const pagesA = a.numberOfPages || 0
+          const pagesB = b.numberOfPages || 0
+          return sortOrder === 'asc' ? pagesA - pagesB : pagesB - pagesA
         }
         return 0
       })
-  }, [books, searchQuery, authorFilter, sortField])
+  }, [books, searchQuery, authorFilter, sortField, sortOrder])
 
   const handleEdit = (isbn: string) => {
     setEditingBook(isbn)
@@ -55,6 +59,11 @@ export default function ReadingList() {
     setEditingBook(null)
   }
 
+  const handleSort = (field: 'publishDate' | 'numberOfPages', order: 'asc' | 'desc') => {
+    setSortField(field)
+    setSortOrder(order)
+  }
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">My Reading List</h1>
@@ -63,9 +72,10 @@ export default function ReadingList() {
       </div>
       <div className="mb-6">
         <BookListControls
+          books={books}
           onSearch={setSearchQuery}
           onFilter={setAuthorFilter}
-          onSort={setSortField}
+          onSort={handleSort}
         />
       </div>
       <div className="space-y-4">
