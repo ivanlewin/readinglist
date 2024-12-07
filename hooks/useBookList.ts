@@ -20,6 +20,12 @@ export function useBookList() {
     setBooks((prevBooks) => prevBooks.filter((book) => book.isbn !== isbn))
   }
 
-  return { books, addBook, removeBook }
+  const editBook = (isbn: string, updatedBook: Book) => {
+    setBooks((prevBooks) =>
+      prevBooks.map((book) => (book.isbn === isbn ? updatedBook : book))
+    )
+  }
+
+  return { books, addBook, removeBook, editBook }
 }
 
