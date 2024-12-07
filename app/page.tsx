@@ -42,18 +42,20 @@ export default function ReadingList() {
       </form>
       <div className="space-y-4">
         {books.map((book: Book) => (
-          <Card key={book.isbn}>
-            <CardContent className="flex items-center gap-4 p-4">
-              <Image
-                src={book.coverUrl}
-                alt={book.title}
-                width={80}
-                height={120}
-                className="object-cover"
-              />
-              <div className="flex-grow">
-                <h2 className="text-lg font-semibold">{book.title}</h2>
-                <p className="text-sm text-gray-600">{book.authors.join(', ')}</p>
+          <Card key={book.isbn} className="h-[150px]">
+            <CardContent className="flex items-center gap-4 p-4 h-full">
+              <div className="w-[80px] h-[120px] flex-shrink-0">
+                <Image
+                  src={book.coverUrl}
+                  alt={book.title}
+                  width={80}
+                  height={120}
+                  className="object-cover w-full h-full"
+                />
+              </div>
+              <div className="flex-grow overflow-hidden">
+                <h2 className="text-lg font-semibold truncate">{book.title}</h2>
+                <p className="text-sm text-gray-600 truncate">{book.authors.join(', ')}</p>
                 <p className="text-xs text-gray-500">ISBN: {book.isbn}</p>
                 <a
                   href={book.amazonUrl}

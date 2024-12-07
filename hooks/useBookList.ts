@@ -7,8 +7,14 @@ export function useBookList() {
   const [books, setBooks] = useState<Book[]>([])
 
   const addBook = (book: Book) => {
-    setBooks((prevBooks) => [...prevBooks, book])
-  }
+    setBooks((prevBooks) => {
+      if (prevBooks.some((b) => b.isbn === book.isbn)) {
+        alert('This book is already in your list.');
+        return prevBooks;
+      }
+      return [...prevBooks, book];
+    });
+  };
 
   const removeBook = (isbn: string) => {
     setBooks((prevBooks) => prevBooks.filter((book) => book.isbn !== isbn))
