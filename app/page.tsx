@@ -1,33 +1,46 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import Image from 'next/image'
-import { fetchBook } from './actions/fetchBook'
 import { useBookList } from '@/hooks/useBookList'
 import { Book } from '@/types/Book'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Trash2, Edit, Plus } from 'lucide-react'
+import { Trash2, Edit } from 'lucide-react'
 import { EditBookForm } from '@/components/EditBookForm'
-import { AddCustomBookForm } from '@/components/AddCustomBookForm'
+import { AddBookForm } from '@/components/AddBookForm'
+import { BookListControls } from '@/components/BookListControls'
 
 export default function ReadingList() {
-  const [isbn, setIsbn] = useState('')
   const { books, addBook, removeBook, editBook } = useBookList()
   const [editingBook, setEditingBook] = useState<string | null>(null)
-  const [isAddingCustomBook, setIsAddingCustomBook] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [authorFilter, setAuthorFilter] = useState('')
+  const [sortField, setSortField] = useState<'publishDate' | 'numberOfPages' | null>(null)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const book = await fetchBook(isbn)
-    if (book) {
-      addBook(book)
-      setIsbn('')
-    } else {
-      alert('Book not found')
-    }
-  }
+  const filteredAndSortedBooks = useMemo(() => {
+    return books
+      .filter((book) => {
+        const matchesSearch = 
+          book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          book.subtitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          book.authors.some((author) => author.toLowerCase().includes(searchQuery.toLowerCase()))
+        const matchesAuthor = 
+          authorFilter === '' || 
+          book.authors.some((author) => author.toLowerCase().includes(authorFilter.toLowerCase()))
+        return matchesSearch && matchesAuthor
+      })
+      .sort((a, b) => {
+        if (!sortField) return 0
+        if (sortField === 'publishDate') {
+          return new Date(b.publishDate || '').getTime() - new Date(a.publishDate || '').getTime()
+        }
+        if (sortField === 'numberOfPages') {
+          return (b.numberOfPages || 0) - (a.numberOfPages || 0)
+        }
+        return 0
+      })
+  }, [books, searchQuery, authorFilter, sortField])
 
   const handleEdit = (isbn: string) => {
     setEditingBook(isbn)
@@ -42,43 +55,21 @@ export default function ReadingList() {
     setEditingBook(null)
   }
 
-  const handleAddCustomBook = (newBook: Book) => {
-    addBook(newBook)
-    setIsAddingCustomBook(false)
-  }
-
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">My Reading List</h1>
-      <div className="mb-6 space-y-4">
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
-          <Input
-            type="text"
-            value={isbn}
-            onChange={(e) => setIsbn(e.target.value)}
-            placeholder="Enter ISBN"
-            className="flex-grow"
-          />
-          <Button type="submit" className="w-full sm:w-auto">Add Book</Button>
-        </form>
-        <Button 
-          onClick={() => setIsAddingCustomBook(true)} 
-          className="w-full sm:w-auto"
-          disabled={isAddingCustomBook}
-        >
-          <Plus className="mr-2 h-4 w-4" /> Add Custom Book
-        </Button>
+      <div className="mb-6">
+        <AddBookForm onAdd={addBook} />
       </div>
-      {isAddingCustomBook && (
-        <div className="mb-6">
-          <AddCustomBookForm 
-            onAdd={handleAddCustomBook} 
-            onCancel={() => setIsAddingCustomBook(false)} 
-          />
-        </div>
-      )}
+      <div className="mb-6">
+        <BookListControls
+          onSearch={setSearchQuery}
+          onFilter={setAuthorFilter}
+          onSort={setSortField}
+        />
+      </div>
       <div className="space-y-4">
-        {books.map((book: Book) => (
+        {filteredAndSortedBooks.map((book: Book) => (
           <Card key={book.isbn} className="min-h-[150px]">
             <CardContent className="flex flex-col sm:flex-row items-center gap-4 p-4 h-full">
               {editingBook === book.isbn ? (
