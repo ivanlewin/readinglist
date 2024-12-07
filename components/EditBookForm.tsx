@@ -30,7 +30,7 @@ export function EditBookForm({ book, onSave, onCancel }: EditBookFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 w-full">
       <div>
         <Label htmlFor="title">Title</Label>
         <Input id="title" name="title" value={editedBook.title} onChange={handleChange} required />
@@ -51,9 +51,9 @@ export function EditBookForm({ book, onSave, onCancel }: EditBookFormProps) {
         <Label htmlFor="coverUrl">Cover Image URL</Label>
         <Input id="coverUrl" name="coverUrl" value={editedBook.coverUrl} onChange={handleChange} required />
       </div>
-      <div className="flex justify-end space-x-2">
-        <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
-        <Button type="submit">Save</Button>
+      <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2">
+        <Button type="button" variant="outline" onClick={onCancel} className="w-full sm:w-auto">Cancel</Button>
+        <Button type="submit" className="w-full sm:w-auto">Save</Button>
       </div>
     </form>
   )

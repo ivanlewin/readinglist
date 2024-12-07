@@ -44,7 +44,7 @@ export default function ReadingList() {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">My Reading List</h1>
       <form onSubmit={handleSubmit} className="mb-6">
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <Input
             type="text"
             value={isbn}
@@ -52,13 +52,13 @@ export default function ReadingList() {
             placeholder="Enter ISBN"
             className="flex-grow"
           />
-          <Button type="submit">Add Book</Button>
+          <Button type="submit" className="w-full sm:w-auto">Add Book</Button>
         </div>
       </form>
       <div className="space-y-4">
         {books.map((book: Book) => (
-          <Card key={book.isbn} className="h-[150px]">
-            <CardContent className="flex items-center gap-4 p-4 h-full">
+          <Card key={book.isbn} className="min-h-[150px]">
+            <CardContent className="flex flex-col sm:flex-row items-center gap-4 p-4 h-full">
               {editingBook === book.isbn ? (
                 <EditBookForm book={book} onSave={handleSaveEdit} onCancel={handleCancelEdit} />
               ) : (
@@ -69,10 +69,10 @@ export default function ReadingList() {
                       alt={book.title}
                       width={80}
                       height={120}
-                      className="object-cover w-full h-full"
+                      className="object-contain w-full h-full"
                     />
                   </div>
-                  <div className="flex-grow overflow-hidden">
+                  <div className="flex-grow overflow-hidden text-center sm:text-left">
                     <h2 className="text-lg font-semibold truncate">{book.title}</h2>
                     <p className="text-sm text-gray-600 truncate">{book.authors.join(', ')}</p>
                     <p className="text-xs text-gray-500">ISBN: {book.isbn}</p>
@@ -85,12 +85,13 @@ export default function ReadingList() {
                       View on Amazon
                     </a>
                   </div>
-                  <div className="flex flex-col space-y-2">
+                  <div className="flex sm:flex-col space-x-2 sm:space-x-0 sm:space-y-2">
                     <Button
                       variant="outline"
                       size="icon"
                       onClick={() => handleEdit(book.isbn)}
                       aria-label="Edit book"
+                      className="h-8 w-8"
                     >
                       <Edit className="h-4 w-4" />
                     </Button>
@@ -99,7 +100,7 @@ export default function ReadingList() {
                       size="icon"
                       onClick={() => removeBook(book.isbn)}
                       aria-label="Remove book"
-                      className="bg-black text-white hover:bg-gray-800"
+                      className="h-8 w-8 bg-black text-white hover:bg-gray-800"
                     >
                       <Trash2 className="h-3 w-3" />
                     </Button>
