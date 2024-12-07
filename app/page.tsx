@@ -8,10 +8,11 @@ import { Book } from '@/types/Book'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { Trash2 } from 'lucide-react'
 
 export default function ReadingList() {
   const [isbn, setIsbn] = useState('')
-  const { books, addBook } = useBookList()
+  const { books, addBook, removeBook } = useBookList()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -39,32 +40,38 @@ export default function ReadingList() {
           <Button type="submit">Add Book</Button>
         </div>
       </form>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="space-y-4">
         {books.map((book: Book) => (
           <Card key={book.isbn}>
-            <CardContent className="flex gap-4 p-4">
+            <CardContent className="flex items-center gap-4 p-4">
               <Image
                 src={book.coverUrl}
                 alt={book.title}
-                width={120}
-                height={180}
+                width={80}
+                height={120}
                 className="object-cover"
               />
-              <div className="flex flex-col justify-between">
-                <div>
-                  <h2 className="text-lg font-semibold">{book.title}</h2>
-                  <p className="text-sm text-gray-600">{book.authors.join(', ')}</p>
-                  <p className="text-xs text-gray-500">ISBN: {book.isbn}</p>
-                </div>
+              <div className="flex-grow">
+                <h2 className="text-lg font-semibold">{book.title}</h2>
+                <p className="text-sm text-gray-600">{book.authors.join(', ')}</p>
+                <p className="text-xs text-gray-500">ISBN: {book.isbn}</p>
                 <a
                   href={book.amazonUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-500 hover:underline"
+                  className="text-blue-500 hover:underline text-sm"
                 >
                   View on Amazon
                 </a>
               </div>
+              <Button
+                variant="destructive"
+                size="icon"
+                onClick={() => removeBook(book.isbn)}
+                aria-label="Remove book"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
             </CardContent>
           </Card>
         ))}
