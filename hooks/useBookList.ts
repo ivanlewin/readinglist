@@ -13,7 +13,9 @@ function saveBooksToLocalStorage(books: Book[]) {
 }
 
 export function useBookList() {
-  const [books, setBooks] = useState<Book[]>(getBooksFromLocalStorage());
+  const [books, setBooks] = useState<Book[]>(() =>
+    typeof window === "undefined" ? [] : getBooksFromLocalStorage()
+  );
 
   useEffect(() => {
     saveBooksToLocalStorage(books);
