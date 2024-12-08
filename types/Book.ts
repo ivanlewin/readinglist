@@ -3,7 +3,7 @@ export interface Book {
   title: string;
   subtitle?: string;
   authors: string[];
-  coverUrl: string;
+  coverUrl?: string;
   articleUrl: string;
   publishDate?: string;
   numberOfPages?: number;
